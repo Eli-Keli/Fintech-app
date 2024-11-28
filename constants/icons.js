@@ -8,6 +8,8 @@ import home from "../assets/icons/home.png";
 import group from "../assets/icons/group.png";
 import usd from "../assets/icons/usd.png";
 import wallet from "../assets/icons/wallet.png";
+import notification from "../assets/icons/notification.png";
+import people from "../assets/icons/people.jpg";
 
 export default {
   star,
@@ -20,4 +22,6 @@ export default {
   group,
   usd,
   wallet,
+  notification,
+  people,
 };

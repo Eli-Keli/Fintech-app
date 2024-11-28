@@ -3,7 +3,6 @@ import { Tabs, Redirect } from "expo-router"
 import { Image, StyleSheet, Text, View } from "react-native"
 
 
-
 interface TabIconProps {
   icon: any;
   color: string;
@@ -41,7 +40,7 @@ const TabsLayout = () => {
         name="Home"
         options={{
           title: "Home",
-          headerShown: true,
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.home}
