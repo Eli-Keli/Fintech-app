@@ -7,6 +7,8 @@ import {
   Query,
 } from "react-native-appwrite";
 
+import axios from 'axios'; // Make sure to install axios: npm install axios
+
 // Configure the Appwrite SDK
 export const appwriteConfig = {
   endpoint: "https://cloud.appwrite.io/v1",
@@ -25,7 +27,13 @@ const account = new Account(client);
 const avatars = new Avatars(client);
 const databases = new Databases(client);
 
-// Register a new user account and create a new user document in the database
+
+// Add webhook configuration
+export const webhookConfig = {
+  registrationWebhookUrl: 'https://lesom-at-server.onrender.com/user-registered'
+};
+
+// Modify createUser function to send webhook
 export const createUser = async (email: string, password: string, username: string) => {
   try {
       if (!email || !password || !username) {
@@ -51,6 +59,19 @@ export const createUser = async (email: string, password: string, username: stri
           }
       );
       if (!newUser) throw new Error("User registration failed: Unable to create user document");
+
+      // Send webhook notification
+      try {
+          await axios.post(webhookConfig.registrationWebhookUrl, {
+              userId: newUser.$id,
+              username: newUser.username,
+              email: newUser.email,
+              registeredAt: new Date().toISOString()
+          });
+      } catch (webhookError) {
+          console.error("Webhook notification failed:", webhookError);
+          // Optional: You might want to implement a retry mechanism or logging
+      }
 
       return {
           id: newUser.$id,
