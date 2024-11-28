@@ -31,7 +31,7 @@ export default function index() {
           />
           <CustomButton
             title="Create Account"
-            handlePress={() => router.push("/(auth)/SignUp" as any)}
+            handlePress={() => router.push("/(tabs)/Home" as any)}
             containerStyles={styles.btnContainer}
             textStyles={styles.btnText}
           />

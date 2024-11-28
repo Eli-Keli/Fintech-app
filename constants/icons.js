@@ -5,6 +5,9 @@ import google from "../assets/icons/google.png";
 import leftArrow from "../assets/icons/left-arrow.png";
 import back from "../assets/icons/Back.png";
 import home from "../assets/icons/home.png";
+import group from "../assets/icons/group.png";
+import usd from "../assets/icons/usd.png";
+import wallet from "../assets/icons/wallet.png";
 
 export default {
   star,
@@ -14,4 +17,7 @@ export default {
   leftArrow,
   back,
   home,
+  group,
+  usd,
+  wallet,
 };

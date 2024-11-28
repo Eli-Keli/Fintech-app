@@ -1,7 +1,8 @@
+import { icons } from "@/constants";
 import { Tabs, Redirect } from "expo-router"
-import { Image, Text, View } from "react-native"
+import { Image, StyleSheet, Text, View } from "react-native"
 
-import { icons } from "../../constants"
+
 
 interface TabIconProps {
   icon: any;
@@ -12,14 +13,14 @@ interface TabIconProps {
 
 const TabIcon = ({ icon, color, name, focused }: TabIconProps) => {
   return (
-    <View className="justify-center items-center gap-2">
+    <View style={styles.iconContainer}>
       <Image
         source={icon}
         resizeMode="contain"
         tintColor={color}
-        className="w-6 h-6"
+        style={styles.iconImage}
       />
-      <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`} style={{ color: color }}>
+      <Text style={{ color: color }}>
         {name}
       </Text>
     </View>
@@ -31,21 +32,16 @@ const TabsLayout = () => {
     <Tabs
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarActiveTintColor: "#FFA001",
+        tabBarActiveTintColor: "#000000",
         tabBarInactiveTintColor: "#CDCDE0",
-        tabBarStyle: {
-          backgroundColor: "#161622",
-          borderTopWidth: 1,
-          borderTopColor: "#232533",
-          height: 84
-        }
+        tabBarStyle: styles.tabBarStyle,
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="Home"
         options={{
           title: "Home",
-          headerShown: false,
+          headerShown: true,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.home}
@@ -56,8 +52,76 @@ const TabsLayout = () => {
           )
         }}
       />
+      <Tabs.Screen
+        name="Literacy"
+        options={{
+          title: "Literacy",
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              icon={icons.usd}
+              color={color}
+              focused={focused}
+              name="Literacy"
+            />
+          )
+        }}
+      />
+      <Tabs.Screen
+        name="Budgeting"
+        options={{
+          title: "Budgeting",
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              icon={icons.wallet}
+              color={color}
+              focused={focused}
+              name="Budgeting"
+            />
+          )
+        }}
+      />
+      <Tabs.Screen
+        name="Group"
+        options={{
+          title: "Group Savings",
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              icon={icons.group}
+              color={color}
+              focused={focused}
+              name="Group"
+            />
+          )
+        }}
+      />
     </Tabs>
   )
 }
 
 export default TabsLayout
+
+const styles = StyleSheet.create({
+  iconContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // borderColor: 'red',
+    // borderWidth: 1,
+    width: 84,
+  },
+  iconImage: {
+    width: 35,
+    height: 35,
+  },
+  tabBarStyle: {
+    backgroundColor: '#EFEFEF',
+    borderTopWidth: 1,
+    borderTopColor: '#232533',
+    height: 70,
+    // borderColor: 'green',
+    // borderWidth: 1,
+  },
+})
