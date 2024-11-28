@@ -26,7 +26,7 @@ const avatars = new Avatars(client);
 const databases = new Databases(client);
 
 // Register a new user account and create a new user document in the database
-export const createUser = async (email, password, username) => {
+export const createUser = async (email: string, password: string, username: string) => {
   try {
       if (!email || !password || !username) {
           throw new Error("Invalid input: Email, password, and username are required.");
@@ -59,23 +59,18 @@ export const createUser = async (email, password, username) => {
           avatar: avatarUrl,
       };
   } catch (error) {
-      console.error("Error in createUser:", error.message);
+      console.error("Error in createUser:", (error as Error).message);
       throw error;
   }
 };
 
 // Sign In user
-export const signIn = async (email, password) => {
+export const signIn = async (email: string, password: string) => {
   try {
-      if (!email || !password) throw new Error("Email and password are required");
-
-      const session = await account.createEmailSession(email, password);
-      return {
-          sessionId: session.$id,
-          userId: session.userId,
-      };
+    const session = await account.createEmailPasswordSession(email, password);
+    return session;
   } catch (error) {
-      console.error("Error in signIn:", error.message);
+      console.error("Error in signIn:", (error as Error).message);
       throw new Error("Failed to log in. Please check your credentials.");
   }
 };
@@ -96,7 +91,7 @@ export const getCurrentUser = async () => {
 
       return currentUser.documents[0];
   } catch (error) {
-      console.error("Error in getCurrentUser:", error.message);
+      console.error("Error in getCurrentUser:", (error as Error).message);
       throw error;
   }
 };

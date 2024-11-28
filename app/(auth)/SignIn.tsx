@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, SafeAreaView, ScrollView, View, Image, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, SafeAreaView, ScrollView, View, Image, TouchableOpacity, Alert } from 'react-native';
 
 
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -8,6 +8,7 @@ import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import { icons } from '@/constants';
 import { Link, router } from 'expo-router';
+import { signIn } from '@/lib/appwrite';
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -15,9 +16,24 @@ const SignIn = () => {
     password: '',
   });
 
-  const submit = () => {
-    console.log(form);
-  };
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const submit = async () => {
+    if (!form.email || !form.password) return Alert.alert('Error', 'Please fill in all fields')
+
+      setIsSubmitting(true)
+
+      try {
+          const session = await signIn(form.email, form.password)
+
+          Alert.alert('Success', 'User signed in successfully')
+          router.replace('/Home')
+      } catch (error) {
+        Alert.alert('Error', 'An unknown error occurred');
+      } finally {
+          setIsSubmitting(false)
+      }
+  }
 
 
   return (
@@ -72,6 +88,7 @@ const SignIn = () => {
           <CustomButton
             title="Sign In"
             handlePress={submit}
+            isLoading={isSubmitting}
           />
 
           <Text style={styles.orText}>Or Login with</Text>

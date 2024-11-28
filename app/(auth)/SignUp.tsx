@@ -1,25 +1,51 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, SafeAreaView, ScrollView, View, Image, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, SafeAreaView, ScrollView, View, Image, TouchableOpacity, Alert } from 'react-native';
 
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
+import { createUser } from '@/lib/appwrite';
 
 import { icons } from '@/constants';
 import FormField from '@/components/FormField';
 import CustomButton from '@/components/CustomButton';
 import { Link, router } from 'expo-router';
 
-const SignUp = () => {
-  const [form, setForm] = useState({
+interface FormState {
+  username: string;
+  email: string;
+  password: string;
+}
+
+const SignUp: React.FC = () => {
+  const [form, setForm] = useState<FormState>({
     username: '',
     email: '',
     password: '',
   });
 
-  const submit = () => {
-    console.log(form);
-  };
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
+  const submit = async () => {
+    if (!form.username || !form.email || !form.password) {
+      return Alert.alert('Error', 'Please fill in all fields');
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const result = await createUser(form.email, form.password, form.username);
+
+      router.replace('/Home');
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert('Error', error.message);
+      } else {
+        Alert.alert('Error', 'An unknown error occurred');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -64,19 +90,20 @@ const SignUp = () => {
             otherStyles={styles.formField}
           />
 
-            <View style={styles.checkboxContainer}>
-              <BouncyCheckbox
-                size={20}
-                fillColor="black"
-                iconStyle={styles.checkbox}
-                isChecked={true}
-              />
-              <Text style={styles.checkboxText}>I accept the terms and privacy policy</Text>
-            </View>
+          <View style={styles.checkboxContainer}>
+            <BouncyCheckbox
+              size={20}
+              fillColor="black"
+              iconStyle={styles.checkbox}
+              isChecked={true}
+            />
+            <Text style={styles.checkboxText}>I accept the terms and privacy policy</Text>
+          </View>
 
           <CustomButton
             title="Sign Up"
             handlePress={submit}
+            isLoading={isSubmitting}
           />
 
           <Text style={styles.orText}>Or Register with</Text>
@@ -123,8 +150,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 60,
     paddingHorizontal: 20,
-    // borderColor: 'red',
-    // borderWidth: 2,
   },
   imageContainer: {
     width: '100%',
@@ -156,9 +181,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 40,
   },
-  checkbox: {
-    // marginRight: 12,
-  },
+  checkbox: {},
   checkboxText: {
     fontSize: 14,
   },
